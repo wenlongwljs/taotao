@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.taotao.manage.pojo.ItemCat;
 import com.taotao.manage.service.ItemCatService;
@@ -20,13 +21,14 @@ public class ItemCatController {
 	private ItemCatService itemCatService;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<ItemCat>> queryItemCatListByParentId(){
+	public ResponseEntity<List<ItemCat>> queryItemCatListByParentId(@RequestParam(value="id",defaultValue="0") Long parentId){
 		try {
-			List<ItemCat> list = itemCatService.queryItemCatListByParntId(0L);
+			List<ItemCat> list = itemCatService.queryItemCatListByParntId(parentId);
 			if(list == null || list.isEmpty()) {
 				//资源不存在，返回404
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 			}
+			//资源存在，返回500
 			return ResponseEntity.ok(list);
 		}catch(Exception e){
 			e.printStackTrace();

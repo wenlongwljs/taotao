@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name="tb_item_cat")
-public class ItemCat extends BasePojo {
+public class ItemCat extends BasePojo{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -70,5 +70,13 @@ public class ItemCat extends BasePojo {
 		this.isParent = isParent;
 	}
 	
+	//集成EasyUI Tree数据结构格式
 	
+	public String getText() {
+		return this.getName();
+	}
+	
+	public String getState() {
+		return this.getIsParent() ? "closed" : "open";
+	}
 }

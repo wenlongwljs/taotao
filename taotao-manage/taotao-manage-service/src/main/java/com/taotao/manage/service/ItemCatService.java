@@ -21,7 +21,7 @@ public class ItemCatService {
 	 */
 	public List<ItemCat> queryItemCatListByParntId(Long parentId){
 		ItemCat recod = new ItemCat();
-		recod.setParentId(0L);
+		recod.setParentId(parentId);
 		return this.itemCatMapper.select(recod);
 	}
 

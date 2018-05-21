@@ -117,8 +117,9 @@ var TT = TAOTAO = {
     			    	var _win = this;
     			    	//_win 参数，表示在当前div中查找，缩小查找范围
     			    	$("ul",_win).tree({
-    			    		url:'/rest/item/cat/list',
+    			    		url:'/rest/item/cat',
     			    		animate:true,
+    			    		method:'GET',
     			    		onClick : function(node){
     			    			if($(this).tree("isLeaf",node.target)){
     			    				// 填写到cid中
