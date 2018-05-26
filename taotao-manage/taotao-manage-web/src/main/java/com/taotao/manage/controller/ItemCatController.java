@@ -23,7 +23,9 @@ public class ItemCatController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<ItemCat>> queryItemCatListByParentId(@RequestParam(value="id",defaultValue="0") Long parentId){
 		try {
-			List<ItemCat> list = itemCatService.queryItemCatListByParntId(parentId);
+			ItemCat record = new ItemCat();
+			record.setParentId(parentId);
+			List<ItemCat> list = itemCatService.queryListByWhere(record);
 			if(list == null || list.isEmpty()) {
 				//资源不存在，返回404
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
