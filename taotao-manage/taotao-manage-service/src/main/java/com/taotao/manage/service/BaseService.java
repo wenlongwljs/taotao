@@ -1,19 +1,20 @@
 package com.taotao.manage.service;
 
+import java.util.Date;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.abel533.entity.Example;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.taotao.manage.pojo.BasePojo;
 
-public abstract class BaseService<T> {
+public class BaseService<T extends BasePojo> {
 	
-	/**
-	 * 定义一个抽象方法，用户继承后实现这个方法，根据不同的操作对象去实现不同的Mapper<T>
-	 * @return
-	 */
-	public abstract Mapper<T> getMapper();
+	@Autowired
+	public Mapper<T> mapper;
 	
 	/**
 	 * 根据id 查询数据
@@ -21,7 +22,7 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public T queryById(Long id) {
-		return this.getMapper().selectByPrimaryKey(id);
+		return this.mapper.selectByPrimaryKey(id);
 	}
 	
 	/**
@@ -29,7 +30,7 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public List<T> queryAll(){
-		return this.getMapper().select(null);
+		return this.mapper.select(null);
 	}
 	
 	/**
@@ -38,11 +39,11 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public T queryOne(T record) {
-		return this.getMapper().selectOne(record);
+		return this.mapper.selectOne(record);
 	}
 	
 	public List<T> queryListByWhere(T record){
-		return this.getMapper().select(record);
+		return this.mapper.select(record);
 	}
 	
 	public PageInfo<T> queryPageListByWhere(Integer page, Integer rows, T record){
@@ -60,7 +61,9 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public Integer save(T record) {
-		return this.getMapper().insert(record);
+		record.setCreated(new Date());
+		record.setUpdated(record.getCreated());
+		return this.mapper.insert(record);
 	}
 	
 	/**
@@ -69,7 +72,9 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public Integer saveSelective(T record) {
-		return this.getMapper().insertSelective(record);
+		record.setCreated(new Date());
+		record.setUpdated(record.getCreated());
+		return this.mapper.insertSelective(record);
 	}
 	
 	/**
@@ -78,7 +83,8 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public Integer update(T record) {
-		return this.getMapper().updateByPrimaryKey(record);
+		record.setUpdated(new Date());
+		return this.mapper.updateByPrimaryKey(record);
 	}
 	
 	/**
@@ -87,7 +93,8 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public Integer updateBySelective(T record) {
-		return this.getMapper().updateByPrimaryKeySelective(record);
+		record.setUpdated(new Date());
+		return this.mapper.updateByPrimaryKeySelective(record);
 	}
 	
 	/**
@@ -96,7 +103,7 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public Integer deleteById(Long id) {
-		return this.getMapper().deleteByPrimaryKey(id);
+		return this.mapper.deleteByPrimaryKey(id);
 	}
 	
 	/**
@@ -109,7 +116,7 @@ public abstract class BaseService<T> {
 	public Integer deleteByIds(Class<T> clazz,String property, List<Object> values) {
 		Example ex = new Example(clazz);
 		ex.createCriteria().andIn(property, values);
-		return this.getMapper().deleteByExample(ex);
+		return this.mapper.deleteByExample(ex);
 	}
 	
 	/**
@@ -118,6 +125,6 @@ public abstract class BaseService<T> {
 	 * @return
 	 */
 	public Integer deleteByWhere(T record) {
-		return this.getMapper().delete(record);
+		return this.mapper.delete(record);
 	}
 }
