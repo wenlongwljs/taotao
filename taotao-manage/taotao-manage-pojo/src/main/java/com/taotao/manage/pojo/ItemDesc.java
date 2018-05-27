@@ -16,10 +16,9 @@ import javax.persistence.Table;
 public class ItemDesc extends BasePojo{
 	
 	/**
-	 * 商品ID
+	 * 商品ID，不需要自己创建，引用tb_item表的ID
 	 */
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long itemId;
 	
 	/**

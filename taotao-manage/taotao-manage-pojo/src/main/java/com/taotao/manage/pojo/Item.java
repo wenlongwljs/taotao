@@ -33,7 +33,7 @@ public class Item extends BasePojo{
 	/**
 	 * 库存数量
 	 */
-	private Long num;
+	private Integer num;
 	
 	/**
 	 * 商品条形码
@@ -87,11 +87,11 @@ public class Item extends BasePojo{
 		this.price = price;
 	}
 
-	public Long getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Long num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

@@ -11,7 +11,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.taotao.manage.pojo.BasePojo;
 
-public class Service<T extends BasePojo> {
+public class BaseService<T extends BasePojo> {
 	
 	/**
 	 * Spring 4 中添加了泛型注入功能，这里通过传入的T自动算出对应的Mapper类型，比如T=ItemCat ->ItemCatMapper
