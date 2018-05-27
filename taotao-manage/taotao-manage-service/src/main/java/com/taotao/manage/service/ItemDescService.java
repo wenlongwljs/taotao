@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 import com.taotao.manage.pojo.ItemDesc;
 
 @Service
-public class ItemDescService extends BaseService<ItemDesc>{
+public class ItemDescService extends com.taotao.manage.service.Service<ItemDesc>{
 
 }

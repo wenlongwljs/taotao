@@ -11,18 +11,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.taotao.manage.pojo.Item;
 import com.taotao.manage.pojo.ItemDesc;
-import com.taotao.manage.service.ItemDescService;
-import com.taotao.manage.service.ItemService;
+import com.taotao.manage.service.Service;
 
 @RequestMapping("item")
 @Controller
 public class ItemController {
 	
 	@Autowired
-	private ItemService itemService;
+	private Service<Item> itemService;
 	
 	@Autowired
-	private ItemDescService itemDescService;
+	private Service<ItemDesc> itemDescService;
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> saveItem(Item item, @RequestParam("desc") String desc){

@@ -11,14 +11,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.taotao.manage.pojo.ItemCat;
-import com.taotao.manage.service.ItemCatService;
+import com.taotao.manage.service.Service;
 
 @RequestMapping("item/cat")
 @Controller
 public class ItemCatController {
 	
+	/**
+	 * Spring 4 中添加了泛型注入功能，这里通过传入的T自动算出对应的Service类型，比如T=ItemCat ->ItemCatService
+	 * ItemCatService 类必须存在，并且已经继承了Service<ItemCat>类。因为这里不是自动代理生成ItemCatService类，只是自动算出了类名，然后到容器中去找这个类
+	 * 的实例。
+	 */
 	@Autowired
-	private ItemCatService itemCatService;
+	private Service<ItemCat> itemCatService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<ItemCat>> queryItemCatListByParentId(@RequestParam(value="id",defaultValue="0") Long parentId){
