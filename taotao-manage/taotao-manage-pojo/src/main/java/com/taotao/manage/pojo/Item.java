@@ -126,5 +126,11 @@ public class Item extends BasePojo{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", title=" + title + ", sellPoint=" + sellPoint + ", price=" + price + ", num=" + num
+				+ ", barcode=" + barcode + ", image=" + image + ", cid=" + cid + ", status=" + status + "]";
+	}
 	
 }

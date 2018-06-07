@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.taotao.manage.bean.PicUploadResult;
+import com.taotao.manage.service.PropertieService;
 
 /**
  * 图片上传
@@ -40,10 +42,8 @@ public class PicUploadController {
 	 */
 	private static final String[] IMAGE_TYPE = new String[] {".jpg",".jpeg",".png",".gif",".bmp"};
 	
-	private static final String BASE_UPLOAD_DIR = "E:\\taotao-upload";
-	
-	private static final String IMAGE_HOST_NAME = "http://image.taotao.com";
-	
+	@Autowired
+	private PropertieService propertieService;
 	
 	@ResponseBody
 	@RequestMapping(value = "upload", method = RequestMethod.POST, produces =  MediaType.TEXT_PLAIN_VALUE)
@@ -80,9 +80,9 @@ public class PicUploadController {
 		}
 		
 		//生成图片的相对引用路径
-		String picUrl = StringUtils.replace(StringUtils.substringAfter(filePath, BASE_UPLOAD_DIR), "\\", "/");
+		String picUrl = StringUtils.replace(StringUtils.substringAfter(filePath, propertieService.REPOSITORY_PATH), "\\", "/");
 		//设置图片上传后的网络访问路径，通过nginx代理网络访问。
-		result.setUrl(IMAGE_HOST_NAME+picUrl);
+		result.setUrl(propertieService.IMAGE_BASE_URL+picUrl);
 		
 		//将文件写入磁盘
 		File desc = new File(filePath);
@@ -118,7 +118,7 @@ public class PicUploadController {
 	
 	public String getFilePath(String sourceFileName) {
 		
-		String baseFolder  = BASE_UPLOAD_DIR + File.separator + "image";
+		String baseFolder  = propertieService.REPOSITORY_PATH + File.separator + "image";
 		
 		Date nowDate = new Date();
 		
