@@ -11,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import com.taotao.manage.mapper.ItemMapper;
 import com.taotao.manage.pojo.Item;
 import com.taotao.manage.pojo.ItemDesc;
+import com.taotao.manage.pojo.ItemParamItem;
 
 @Service
 public class ItemService extends BaseService<Item>{
@@ -21,21 +22,28 @@ public class ItemService extends BaseService<Item>{
 	private ItemDescService itemDescService;
 	
 	@Autowired
+	private ItemParamItemService itemParamItemService;
+	
+	@Autowired
 	private ItemMapper itemMapper;
 	
-	public Boolean itemSave(Item item, String desc) {
+	public Boolean saveItem(Item item, String desc,String itemParams) {
 		//初始值为1，上架状态
 		item.setStatus(1);
 		//处于安全考虑，id由数据库自动生成，避免用户恶意从前端提交id
 		item.setId(null);
 		Integer count1 = super.save(item);
-		
+		//保存描述信息
 		ItemDesc itemDesc = new ItemDesc();
 		itemDesc.setItemId(item.getId());
-		itemDesc.setItemDesc(desc);		
+		itemDesc.setItemDesc(desc);
 		Integer count2 = this.itemDescService.save(itemDesc);
-		
-		return count1.intValue() == 1 && count2.intValue() == 1;
+		//保存类目模板信息
+		ItemParamItem itemParamItem = new ItemParamItem();
+			itemParamItem.setItemId(item.getId());
+			itemParamItem.setParamData(itemParams);
+		Integer count3 = itemParamItemService.save(itemParamItem);
+		return count1.intValue() == 1 && count2.intValue() == 1 && count3.intValue() == 1;
 	}
 
 	public PageInfo<Item> queryItemList(Integer page, Integer rows) {
@@ -45,6 +53,21 @@ public class ItemService extends BaseService<Item>{
 		PageHelper.startPage(page,rows);
 		List<Item> list = this.itemMapper.selectByExample(example);
 		return new PageInfo<Item>(list);
+	}
+
+	public Boolean updateItem(Item item, String desc) {
+		//处于安全考虑，将不可以修改的字段设置为null,避免用户恶意从前端提交
+		item.setCreated(null);
+		item.setStatus(null);
+		Integer count1 = super.updateBySelective(item);
+		
+		ItemDesc itemDesc = new ItemDesc();
+		itemDesc.setCreated(null);
+		itemDesc.setItemId(item.getId());
+		itemDesc.setItemDesc(desc);
+		Integer count2 = this.itemDescService.updateBySelective(itemDesc);
+		
+		return count1.intValue() == 1 && count2.intValue() == 1;
 	}
 
 }

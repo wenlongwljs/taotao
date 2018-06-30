@@ -35,7 +35,7 @@ public class ItemController {
 	private ItemService itemService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> saveItem(Item item, @RequestParam("desc") String desc){
+	public ResponseEntity<Void> saveItem(Item item, @RequestParam("desc") String desc, @RequestParam("itemParams") String itemParams){
 		try {
 			if(LOGGER.isInfoEnabled()) {
 				LOGGER.info("新增商品，item = {} , desc = {}" ,item ,desc);
@@ -47,7 +47,7 @@ public class ItemController {
 			}
 			
 			//将Item 和 ItemDesc的保存放到一个Service方法中进行，这样就保持了事务的一致性。
-			Boolean flag = this.itemService.itemSave(item,desc);
+			Boolean flag = this.itemService.saveItem(item,desc,itemParams);
 			
 			if(!flag) {
 				if(LOGGER.isInfoEnabled()) {
@@ -88,5 +88,41 @@ public class ItemController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
+	
+	@RequestMapping(method = RequestMethod.PUT)
+	public ResponseEntity<Void> updateItem(Item item, @RequestParam("desc") String desc){
+		try {
+			if(LOGGER.isInfoEnabled()) {
+				LOGGER.info("修改商品，item = {} , desc = {}" ,item ,desc);
+			}
+			
+			if(StringUtils.isEmpty(item.getTitle())) {
+				//参数有误 400
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
+			
+			//将Item 和 ItemDesc的保存放到一个Service方法中进行，这样就保持了事务的一致性。
+			Boolean flag = this.itemService.updateItem(item,desc);
+			
+			if(!flag) {
+				if(LOGGER.isInfoEnabled()) {
+					LOGGER.info("修改商品失败，item = {} , desc = {}" ,item ,desc);
+				}
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
+			
+			if(LOGGER.isInfoEnabled()) {
+				LOGGER.info("修改商品成功 itemId = {}" , item.getId());
+			}
+			
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		} catch (Exception e) {
+			if(LOGGER.isInfoEnabled()) {
+				LOGGER.info("修改商品失败，item = {} , desc = {}" ,item ,desc , e);
+			}
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
 }
  
